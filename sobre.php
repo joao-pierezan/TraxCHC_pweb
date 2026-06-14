@@ -104,7 +104,7 @@
                 </div>
                 <div class="col-md-8 d-flex align-items-center">
                   <div class="card-body">
-                    <h5 class="card-title">Pedro Carbonari</h5>
+                    <h5 class="card-title">Luis Henrique Dos Santos</h5>
                     <p class="card-text mb-1">Cofundador e Diretor de Operações.</p>
                     <p class="card-text">Especialista em curadoria de metais e logística internacional, garantindo a excelência da TraxCHC.</p>
                     <p class="card-text fst-italic small text-muted">
