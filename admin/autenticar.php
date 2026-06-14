@@ -19,12 +19,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([':login' => $login]);
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // CORREÇÃO: Usamos password_verify para comparar a senha digitada com a criptografada no banco
+            // --- INÍCIO DA CORREÇÃO AUTOMÁTICA ---
+            // Se a senha no banco for aquele texto falso do SQL e você digitou 123...
+            $hash_falso_do_sql = '$2y$10$uU8vYxN8K0bB6s4WbOaO0e6bL1d7N2X1W4E3r5T6y7U8i9O0p1a2s';
+            if ($usuario && $usuario['senha'] === $hash_falso_do_sql && $senha === '123') {
+                // O sistema gera uma criptografia real na hora e atualiza o banco sozinho!
+                $hash_real = password_hash('123', PASSWORD_DEFAULT);
+                $update = $conn->prepare("UPDATE usuario SET senha = :hash WHERE id = :id");
+                $update->execute([':hash' => $hash_real, ':id' => $usuario['id']]);
+                
+                // Atualiza a variável na memória para o login funcionar imediatamente
+                $usuario['senha'] = $hash_real; 
+            }
+            // --- FIM DA CORREÇÃO AUTOMÁTICA ---
+
+            // Agora a verificação padrão vai funcionar perfeitamente
             if ($usuario && password_verify($senha, $usuario['senha'])) {
                 
                 // Autenticação realizada com sucesso!
                 $_SESSION['usuario_logado'] = true;
-                $_SESSION['id_usuario']     = $usuario['id']; // Mantido exatamente como o seu original
+                $_SESSION['id_usuario']     = $usuario['id'];
                 $_SESSION['nome_usuario']   = $usuario['nome'];
                 
                 // Redireciona para o painel administrativo
