@@ -1,12 +1,22 @@
 <?php
 session_start();
-// ... (sua verificação de login e conexão com banco continuam iguais) ...
+
+// 1. Proteção: Se não estiver logado, expulsa para o login
+if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+
+// 2. Conexão com o Banco de Dados
+require_once __DIR__ . '/../site/database/db.class.php';
+$db = new db();
+$conn = $db->connect();
 
 // Pega o termo de busca, se houver
 $busca = $_GET['busca'] ?? '';
 
 try {
-    // Se o usuário digitou algo na busca, filtra com LIKE
+    // 3. Busca os produtos do banco (com ou sem filtro de busca)
     if (!empty($busca)) {
         $stmt = $conn->prepare("SELECT * FROM produto WHERE nome LIKE :busca ORDER BY id DESC");
         // O % antes e depois permite achar a palavra em qualquer parte do nome
@@ -51,9 +61,23 @@ try {
                 </h2>
             </div>
             
-            <a href="produto-formulario.php" class="btn btn-gold text-uppercase px-4 py-2.5 d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.05em;">
+            <a href="ProdutoForm.php" class="btn btn-gold text-uppercase px-4 py-2.5 d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.05em;">
                 <i class="bi bi-plus-circle-fill"></i> Novo Produto
             </a>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form action="ProdutoList.php" method="GET" class="d-flex">
+                    <input type="text" name="busca" class="form-control bg-transparent text-white border-secondary me-2" placeholder="Buscar por nome do produto..." value="<?= htmlspecialchars($busca) ?>">
+                    <button type="submit" class="btn btn-gold text-uppercase" style="font-weight: 600;">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                    <?php if(!empty($busca)): ?>
+                        <a href="ProdutoList.php" class="btn btn-outline-light ms-2">Limpar</a>
+                    <?php endif; ?>
+                </form>
+            </div>
         </div>
 
         <div class="glass-card p-0 overflow-hidden shadow-lg border-0">
@@ -85,7 +109,7 @@ try {
                                     <td class="fw-bold" style="color: var(--gold);">R$ <?= number_format($p['preco'], 2, ',', '.'); ?></td>
                                     <td class="text-white-50 text-truncate" style="max-width: 250px; font-size: 0.9rem;"><?= htmlspecialchars($p['descricao']); ?></td>
                                     <td class="text-center pe-4">
-                                        <a href="produto-formulario.php?id=<?= $p['id']; ?>" class="btn btn-sm btn-outline-warning me-1 px-2.5 py-1" title="Editar">
+                                        <a href="ProdutoForm.php?id=<?= $p['id']; ?>" class="btn btn-sm btn-outline-warning me-1 px-2.5 py-1" title="Editar">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         <a href="produto-excluir.php?id=<?= $p['id']; ?>" class="btn btn-sm btn-outline-danger px-2.5 py-1" title="Excluir" onclick="return confirm('Tem certeza que deseja apagar o produto: <?= htmlspecialchars($p['nome']); ?>?')">
@@ -98,7 +122,7 @@ try {
                             <tr>
                                 <td colspan="6" class="text-center text-white-50 py-5">
                                     <i class="bi bi-box-open display-6 mb-2 d-block text-secondary"></i>
-                                    Nenhum produto cadastrado no momento.
+                                    Nenhum produto encontrado.
                                 </td>
                             </tr>
                         <?php endif; ?>
