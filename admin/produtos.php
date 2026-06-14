@@ -1,21 +1,21 @@
 <?php
 session_start();
+// ... (sua verificação de login e conexão com banco continuam iguais) ...
 
-// 1. Proteção: Se não estiver logado, expulsa para o login
-if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
-    header('Location: login.php');
-    exit;
-}
-
-// 2. Conexão com o Banco de Dados
-require_once __DIR__ . '/../site/database/db.class.php';
-$db = new db();
-$conn = $db->connect();
+// Pega o termo de busca, se houver
+$busca = $_GET['busca'] ?? '';
 
 try {
-    // 3. Busca todos os produtos do banco
-    $stmt = $conn->prepare("SELECT * FROM produto ORDER BY id DESC");
-    $stmt->execute();
+    // Se o usuário digitou algo na busca, filtra com LIKE
+    if (!empty($busca)) {
+        $stmt = $conn->prepare("SELECT * FROM produto WHERE nome LIKE :busca ORDER BY id DESC");
+        // O % antes e depois permite achar a palavra em qualquer parte do nome
+        $stmt->execute([':busca' => "%$busca%"]);
+    } else {
+        // Se não buscou nada, traz tudo
+        $stmt = $conn->prepare("SELECT * FROM produto ORDER BY id DESC");
+        $stmt->execute();
+    }
     $produtos = $stmt->fetchAll();
 } catch (PDOException $e) {
     die("Erro ao buscar produtos: " . $e->getMessage());

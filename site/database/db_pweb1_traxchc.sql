@@ -32,7 +32,7 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`nome`, `telefone`, `email`, `login`, `senha`) VALUES
 ('Administrador', '(00) 00000-0000', 'admin@traxchc.com', 'admin', '$2y$10$uU8vYxN8K0bB6s4WbOaO0e6bL1d7N2X1W4E3r5T6y7U8i9O0p1a2s');
 
-CREATE TABLE IF NOT EXISTS `produtos` (
+CREATE TABLE IF NOT EXISTS `produto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(150) NOT NULL,
   `descricao` text NOT NULL,
