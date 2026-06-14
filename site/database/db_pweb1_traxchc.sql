@@ -14,7 +14,7 @@ CREATE TABLE `categoria` (
 
 INSERT INTO `categoria` (`nome`, `descricao`, `status`) VALUES
 ('Ouro', 'Barras de ouro diversas', 'Ativo'),
-('Prata', 'Barras de prata diversas', 'Ativo');
+('Prata', 'Barras de prata diversas', 'Ativo'),
 ('Moedas de Ouro', 'Moedas para colecionadores de tempos antigos', 'Ativo');
 
 CREATE TABLE `usuario` (
