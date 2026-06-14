@@ -3,7 +3,7 @@ class db {
     private $host     = 'localhost';
     private $dbname   = 'db_pweb1_traxchc'; // Nome correto com bd_
     private $username = 'root';
-    private $password = null;             // Usar null em vez de '' impede o envio de senha vazia
+    private $password = ''; // Usar aspas vazias é o padrão seguro para XAMPP
 
     public function connect() {
         try {
