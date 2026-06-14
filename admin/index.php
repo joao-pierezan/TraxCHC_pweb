@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Proteção da página: se não estiver logado, redireciona para o formulário de login
+// o isset verifica se o usuário não está logado, caso seja verdadeiro ele é direcionado para a página de login
 if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
     header('Location: login.php?erro=Faça login para acessar o painel.');
     exit;
