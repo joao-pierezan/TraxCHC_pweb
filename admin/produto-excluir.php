@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// 1. Proteção de acesso: só admin logado entra aqui
 if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
     header('Location: login.php');
     exit;
@@ -16,22 +15,18 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $conn = $db->connect();
 
     try {
-        // [DICA DE OURO] Antes de apagar do banco, vamos descobrir se o produto tinha foto
-        $stmt_busca = $conn->prepare("SELECT imagem FROM produto WHERE id = :id");
-        $stmt_busca->execute(['id' => $id]);
+        $stmt_busca = $conn->prepare("SELECT imagem FROM produto WHERE id = :id"); //envia o comando pro banco achar o produto
+        $stmt_busca->execute(['id' => $id]); //envia o comando pro banco achar o produto
         $produto = $stmt_busca->fetch();
 
         if ($produto && !empty($produto['imagem'])) {
             $caminho_foto = __DIR__ . '/../site/assets/img/produtos/' . $produto['imagem'];
-            
-            // Se o arquivo da foto realmente existir na pasta do computador, nós apagamos ele (unlink)
-            // Isso evita que seu servidor fique cheio de fotos "órfãs" de produtos que já foram deletados
             if (file_exists($caminho_foto)) {
                 unlink($caminho_foto);
             }
         }
 
-        // 3. Agora sim, deleta o produto do banco de dados de vez
+        // deleta o produto com o indice especifico
         $stmt_deleta = $conn->prepare("DELETE FROM produto WHERE id = :id");
         $stmt_deleta->execute(['id' => $id]);
 
@@ -40,6 +35,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     }
 }
 
-// 4. Redireciona de volta para a listagem (que agora não terá mais o produto deletado)
+// Volta para a listagem
 header('Location: produtos.php');
 exit;
