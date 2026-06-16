@@ -1,29 +1,28 @@
 <?php
 class db {
     private $host     = 'localhost';
-    private $dbname   = 'db_pweb1_traxchc'; // 4 atributos que o php usa para se conectar com o banco
+    private $dbname   = 'db_pweb1_traxchc';
     private $username = 'root';
-<<<<<<< HEAD
-    private $password = ''; // Usar aspas vazias é o padrão seguro para XAMPP
-=======
-    private $password = null;
->>>>>>> c8b35ed8d7310baa9b4cbfc122c32d3bc25ac834
+    private $password = ''; // XAMPP usa senha vazia por padrao
 
-    public function connect() { //função para conectar com o banco
+    // Metodo responsavel por conectar com o banco de dados
+    public function connect() {
         try {
-            $conexao = new PDO( //PDO é a ferramenta que o php usa para conversar com o banco
-                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4", // Para o PDO saber o endereço do servidor e o nome do banco
+            // Instancia o PDO passando as credenciais
+            $conexao = new PDO(
+                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4", 
                 $this->username, 
                 $this->password
             );
             
-            $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//no exato momento que o código der erro, ele para e mostra o erro
+            // Configura o PDO para exibir os erros corretamente
+            $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $conexao->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
             return $conexao;
 
         } catch (PDOException $e) {
-            die('Erro na ligação à base de dados: ' . $e->getMessage());
+            die('Erro de conexao: ' . $e->getMessage());
         }
     }
 }

@@ -47,7 +47,7 @@ if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] === true) 
                 <label for="login" class="form-label small fw-semibold mb-1" style="color: var(--text-muted);">Usuário</label>
                 <div class="input-group">
                     <span class="input-group-text border-0" style="background-color: rgba(255,255,255,0.03); border-right: 1px solid var(--border) !important;"><i class="bi bi-person text-white-50"></i></span>
-                    <input type="text" class="form-control text-light border-0" id="login" name="login" required placeholder="Digite seu usuário" style="background-color: rgba(255,255,255,0.03); box-shadow: none;">
+                    <input type="text" class="form-control text-light border-0" id="login" name="usuario" required placeholder="Digite seu usuário" style="background-color: rgba(255,255,255,0.03); box-shadow: none;">
                 </div>
             </div>
             
